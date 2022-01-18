@@ -1,0 +1,24 @@
+diff -rupN Flask-Security-Too-4.1.2/requirements/tests.txt Flask-Security-Too-4.1.2-new/requirements/tests.txt
+--- Flask-Security-Too-4.1.2/requirements/tests.txt	2021-09-23 00:54:50.000000000 +0200
++++ Flask-Security-Too-4.1.2-new/requirements/tests.txt	2021-12-27 14:29:21.787213725 +0100
+@@ -2,7 +2,6 @@ Flask-Babel
+ Babel
+ Flask-Login
+ Flask-Mail
+-Flask-Mongoengine
+ Flask-Principal
+ peewee
+ Flask-SQLAlchemy
+@@ -14,12 +13,9 @@ coverage
+ cryptography
+ mongoengine
+ mongomock
+-msgcheck
+ passlib
+ pony>=0.7.11;python_version<'3.9'
+-phonenumberslite
+ pydocstyle
+-pyqrcode
+ pytest-cache
+ pytest-cov
+ pytest
