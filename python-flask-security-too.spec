@@ -3,7 +3,7 @@
 
 Name:           python-%{pkg_name}
 Version:        4.1.4
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Simple security for Flask apps
 License:        MIT
 
@@ -70,6 +70,9 @@ sed -r -i 's@/locale/@/translations/@' flask_security.lang
 
 
 %changelog
+* Fri Jun 24 2022 Python Maint <python-maint@redhat.com> - 4.1.4-2
+- Rebuilt for Python 3.11
+
 * Wed Apr 20 2022 Sandro Mani <manisandro@gmail.com> - 4.1.4-1
 - Update to 4.1.4
 
