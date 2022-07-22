@@ -3,7 +3,7 @@
 
 Name:           python-%{pkg_name}
 Version:        4.1.4
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Simple security for Flask apps
 License:        MIT
 
@@ -70,6 +70,9 @@ sed -r -i 's@/locale/@/translations/@' flask_security.lang
 
 
 %changelog
+* Fri Jul 22 2022 Fedora Release Engineering <releng@fedoraproject.org> - 4.1.4-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_37_Mass_Rebuild
+
 * Fri Jun 24 2022 Python Maint <python-maint@redhat.com> - 4.1.4-2
 - Rebuilt for Python 3.11
 
