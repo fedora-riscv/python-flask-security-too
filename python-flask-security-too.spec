@@ -3,7 +3,7 @@
 
 Name:           python-%{pkg_name}
 Version:        4.1.4
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Simple security for Flask apps
 License:        MIT
 
@@ -12,6 +12,9 @@ URL:            https://github.com/Flask-Middleware/flask-security
 Source0:        %{pypi_source Flask-Security-Too}
 # Drop missing test deps
 Patch0:         python-flask-security-too_testdeps.patch
+# Werkzeug 2.2 support
+# https://github.com/Flask-Middleware/flask-security/pull/644
+Patch1:         644.patch
 
 BuildRequires:  python3-devel
 
@@ -70,6 +73,9 @@ sed -r -i 's@/locale/@/translations/@' flask_security.lang
 
 
 %changelog
+* Thu Jul 28 2022 Frantisek Zatloukal <fzatlouk@redhat.com> - 4.1.4-4
+- Backport fix for werkzeug >= 2.2
+
 * Fri Jul 22 2022 Fedora Release Engineering <releng@fedoraproject.org> - 4.1.4-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_37_Mass_Rebuild
 
