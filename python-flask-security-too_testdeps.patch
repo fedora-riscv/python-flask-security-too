@@ -1,6 +1,6 @@
-diff -rupN --no-dereference Flask-Security-Too-4.1.4/requirements/tests.txt Flask-Security-Too-4.1.4-new/requirements/tests.txt
---- Flask-Security-Too-4.1.4/requirements/tests.txt	2022-04-19 17:21:13.000000000 +0200
-+++ Flask-Security-Too-4.1.4-new/requirements/tests.txt	2022-04-20 10:40:32.745273548 +0200
+diff -rupN --no-dereference Flask-Security-Too-4.1.5/requirements/tests.txt Flask-Security-Too-4.1.5-new/requirements/tests.txt
+--- Flask-Security-Too-4.1.5/requirements/tests.txt	2022-07-28 21:46:07.000000000 +0200
++++ Flask-Security-Too-4.1.5-new/requirements/tests.txt	2022-07-29 20:31:37.372133954 +0200
 @@ -2,7 +2,6 @@ Flask-Babel
  Babel
  Flask-Login
