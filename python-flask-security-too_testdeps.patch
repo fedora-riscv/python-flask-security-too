@@ -1,24 +1,32 @@
-diff -rupN --no-dereference Flask-Security-Too-4.1.5/requirements/tests.txt Flask-Security-Too-4.1.5-new/requirements/tests.txt
---- Flask-Security-Too-4.1.5/requirements/tests.txt	2022-07-28 21:46:07.000000000 +0200
-+++ Flask-Security-Too-4.1.5-new/requirements/tests.txt	2022-07-29 20:31:37.372133954 +0200
+diff -rupN --no-dereference Flask-Security-Too-5.1.2/requirements/tests.txt Flask-Security-Too-5.1.2-new/requirements/tests.txt
+--- Flask-Security-Too-5.1.2/requirements/tests.txt	2023-03-13 16:20:25.000000000 +0100
++++ Flask-Security-Too-5.1.2-new/requirements/tests.txt	2023-05-01 14:56:14.723068980 +0200
 @@ -2,7 +2,6 @@ Flask-Babel
  Babel
  Flask-Login
- Flask-Mail
+ Flask-Mailman
 -Flask-Mongoengine
  Flask-Principal
  peewee
  Flask-SQLAlchemy
-@@ -14,12 +13,9 @@ coverage
+@@ -13,13 +12,10 @@ bleach
+ check-manifest
+ coverage
  cryptography
+-djlint
+ python-dateutil
  mongoengine
  mongomock
 -msgcheck
  passlib
- pony>=0.7.11;python_version<'3.9'
--phonenumberslite
+-pony
+ phonenumberslite
  pydocstyle
--pyqrcode
  pytest-cache
- pytest-cov
- pytest
+@@ -30,6 +26,5 @@ qrcode
+ requests
+ sqlalchemy
+ sqlalchemy-utils
+-webauthn>=1.6.0;python_version>='3.8'
+ werkzeug
+ zxcvbn

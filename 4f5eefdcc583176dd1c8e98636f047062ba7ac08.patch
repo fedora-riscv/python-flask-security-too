@@ -1,0 +1,228 @@
+diff -rupN --no-dereference Flask-Security-Too-5.1.2/flask_security/babel.py Flask-Security-Too-5.1.2-new/flask_security/babel.py
+--- Flask-Security-Too-5.1.2/flask_security/babel.py	2023-03-13 16:20:25.000000000 +0100
++++ Flask-Security-Too-5.1.2-new/flask_security/babel.py	2023-05-01 14:56:14.749068714 +0200
+@@ -15,6 +15,11 @@
+ 
+ # flake8: noqa: F811
+ 
++from collections.abc import Iterable
++import atexit
++from contextlib import ExitStack
++from importlib.resources import files, as_file
++
+ import typing as t
+ 
+ from flask import current_app
+@@ -71,10 +76,28 @@ if not t.TYPE_CHECKING:
+ 
+         class FsDomain(_domain_cls):
+             def __init__(self, app):
++                # By default, we use our packaged translations. However, we have to allow
++                # for app to add translation directories or completely override ours.
++                # Grabbing the packaged translations is a bit complex - so we use
++                # the keyword 'builtin' to mean ours.
++                cfdir = cv("I18N_DIRNAME", app=app)
++                if cfdir == "builtin" or (
++                    isinstance(cfdir, Iterable) and "builtin" in cfdir
++                ):
++                    fm = ExitStack()
++                    atexit.register(fm.close)
++                    ref = files("flask_security") / "translations"
++                    path = fm.enter_context(as_file(ref))
++                    if cfdir == "builtin":
++                        dirs = [str(path)]
++                    else:
++                        dirs = [d if d != "builtin" else str(path) for d in cfdir]
++                else:
++                    dirs = cfdir
+                 super().__init__(
+                     **{
+                         "domain": cv("I18N_DOMAIN", app=app),
+-                        _dir_keyword: cv("I18N_DIRNAME", app=app),
++                        _dir_keyword: dirs,
+                     }
+                 )
+ 
+diff -rupN --no-dereference Flask-Security-Too-5.1.2/flask_security/core.py Flask-Security-Too-5.1.2-new/flask_security/core.py
+--- Flask-Security-Too-5.1.2/flask_security/core.py	2023-03-13 16:20:25.000000000 +0100
++++ Flask-Security-Too-5.1.2-new/flask_security/core.py	2023-05-01 14:56:14.750068704 +0200
+@@ -18,7 +18,6 @@ import re
+ import typing as t
+ import warnings
+ 
+-import pkg_resources
+ from flask import current_app, g
+ from flask_login import AnonymousUserMixin, LoginManager
+ from flask_login import UserMixin as BaseUserMixin
+@@ -130,7 +129,7 @@ _default_config: t.Dict[str, t.Any] = {
+     "FLASH_MESSAGES": True,
+     "RETURN_GENERIC_RESPONSES": False,
+     "I18N_DOMAIN": "flask_security",
+-    "I18N_DIRNAME": pkg_resources.resource_filename("flask_security", "translations"),
++    "I18N_DIRNAME": "builtin",
+     "EMAIL_VALIDATOR_ARGS": None,
+     "PASSWORD_HASH": "bcrypt",
+     "PASSWORD_SALT": None,
+@@ -1404,8 +1403,7 @@ class Security:
+ 
+         # set all (SECURITY) config items as attributes (minus the SECURITY_ prefix)
+         for key, value in get_config(app).items():
+-            # need to start getting rid of this - especially things like *_URL which
+-            # should never be referenced
++            # need to start getting rid of this - very confusing.
+             if not key.endswith("_URL"):
+                 setattr(self, key.lower(), value)
+ 
+diff -rupN --no-dereference Flask-Security-Too-5.1.2/flask_security/json.py Flask-Security-Too-5.1.2-new/flask_security/json.py
+--- Flask-Security-Too-5.1.2/flask_security/json.py	2023-03-13 16:20:25.000000000 +0100
++++ Flask-Security-Too-5.1.2-new/flask_security/json.py	2023-05-01 14:56:14.750068704 +0200
+@@ -6,13 +6,6 @@
+ 
+     Pieces of this code liberally copied from flask-mongoengine.
+ """
+-from flask import __version__ as flask_version
+-from pkg_resources import parse_version
+-
+-
+-def use_json_provider() -> bool:
+-    """Split Flask before 2.2.0 and after, to use/not use JSON provider approach."""
+-    return parse_version(flask_version) >= parse_version("2.2.0")
+ 
+ 
+ def _use_encoder(superclass):  # pragma: no cover
+@@ -51,7 +44,8 @@ def _use_provider(superclass):
+ 
+ def setup_json(app, bp=None):
+     # Called at init_app time.
+-    if use_json_provider():
++    if hasattr(app, "json_provider_class"):
++        # Flask >= 2.2
+         app.json_provider_class = _use_provider(app.json_provider_class)
+         app.json = app.json_provider_class(app)
+         # a bit if a hack - if a package (e.g. flask-mongoengine) hasn't
+@@ -61,9 +55,8 @@ def setup_json(app, bp=None):
+         # (app.json_encoder is always set)
+         # (If they do, then Flask 2.2.x won't use json_provider at all)
+         # Of course if they do this AFTER we're initialized all bets are off.
+-        if parse_version(flask_version) >= parse_version("2.2.0"):
+-            if getattr(app, "_json_encoder", None):
+-                app.json_encoder = _use_encoder(app.json_encoder)
++        if getattr(app, "_json_encoder", None):
++            app.json_encoder = _use_encoder(app.json_encoder)
+ 
+     elif bp:  # pragma: no cover
+         bp.json_encoder = _use_encoder(app.json_encoder)
+diff -rupN --no-dereference Flask-Security-Too-5.1.2/flask_security/utils.py Flask-Security-Too-5.1.2-new/flask_security/utils.py
+--- Flask-Security-Too-5.1.2/flask_security/utils.py	2023-03-13 16:20:25.000000000 +0100
++++ Flask-Security-Too-5.1.2-new/flask_security/utils.py	2023-05-01 14:56:14.750068704 +0200
+@@ -14,7 +14,6 @@ import datetime
+ from functools import partial
+ import hashlib
+ import hmac
+-from pkg_resources import parse_version
+ import time
+ import typing as t
+ from urllib.parse import parse_qsl, parse_qs, urlsplit, urlunsplit, urlencode
+@@ -40,7 +39,6 @@ from flask_principal import AnonymousIde
+ from flask_wtf import csrf
+ from wtforms import ValidationError
+ from itsdangerous import BadSignature, SignatureExpired
+-from werkzeug import __version__ as werkzeug_version
+ from werkzeug.local import LocalProxy
+ 
+ from .quart_compat import best, get_quart_status
+@@ -926,10 +924,7 @@ def csrf_cookie_handler(response: "Respo
+ 
+     if op == "clear":
+         # Alas delete_cookie only accepts some of the keywords set_cookie does
+-        # and Werkzeug didn't accept samesite, secure, httponly until 2.0
+         allowed = ["path", "domain", "secure", "httponly", "samesite"]
+-        if parse_version(werkzeug_version) < parse_version("2.0.0"):  # pragma: no cover
+-            allowed = ["path", "domain"]
+         args = {k: csrf_cookie.get(k) for k in allowed if k in csrf_cookie}
+         response.delete_cookie(csrf_cookie_name, **args)
+         session.pop("fs_cc")
+diff -rupN --no-dereference Flask-Security-Too-5.1.2/pytest.ini Flask-Security-Too-5.1.2-new/pytest.ini
+--- Flask-Security-Too-5.1.2/pytest.ini	2023-03-13 16:20:25.000000000 +0100
++++ Flask-Security-Too-5.1.2-new/pytest.ini	2023-05-01 14:56:14.751068694 +0200
+@@ -20,9 +20,11 @@ filterwarnings =
+     ignore:.*'app.json_encoder' is deprecated.*:DeprecationWarning:flask:0
+     ignore:.*Setting 'json_encoder'.*:DeprecationWarning:flask:0
+     ignore:.*'JSONEncoder'.*:DeprecationWarning:flask:0
++    ignore:.*'locked_cached_property'.*:DeprecationWarning:flask:0
+     ignore::DeprecationWarning:mongoengine:
+     ignore:.*passwordless feature.*:DeprecationWarning:flask_security:0
+     ignore:.*passing settings to bcrypt.*:DeprecationWarning:passlib:0
+     ignore:.*'crypt' is deprecated.*:DeprecationWarning:passlib:0
++    ignore:.*pkg_resources is deprecated.*:DeprecationWarning:pkg_resources:0
+     ignore:.*'sms' was enabled in SECURITY_US_ENABLED_METHODS;.*:UserWarning:flask_security:0
+     ignore:.*'get_token_status' is deprecated.*:DeprecationWarning:flask_security:0
+diff -rupN --no-dereference Flask-Security-Too-5.1.2/setup.py Flask-Security-Too-5.1.2-new/setup.py
+--- Flask-Security-Too-5.1.2/setup.py	2023-03-13 16:20:25.000000000 +0100
++++ Flask-Security-Too-5.1.2-new/setup.py	2023-05-01 14:56:14.751068694 +0200
+@@ -10,7 +10,7 @@ with open("flask_security/__init__.py",
+     version = re.search(r'__version__ = "(.*?)"', f.read()).group(1)
+ 
+ install_requires = [
+-    "Flask>=2.1.0,<2.3",
++    "Flask>=2.1.0",
+     "Flask-Login>=0.6.0",
+     "Flask-Principal>=0.4.0",
+     "Flask-WTF>=1.0.0",
+@@ -19,7 +19,6 @@ install_requires = [
+     "passlib>=1.7.4",
+     "blinker>=1.4",
+     "wtforms>=3.0.0",  # for form-level errors
+-    "setuptools",  # for pkg_resources
+ ]
+ 
+ packages = find_packages(exclude=["tests"])
+diff -rupN --no-dereference Flask-Security-Too-5.1.2/tests/test_misc.py Flask-Security-Too-5.1.2-new/tests/test_misc.py
+--- Flask-Security-Too-5.1.2/tests/test_misc.py	2023-03-13 16:20:25.000000000 +0100
++++ Flask-Security-Too-5.1.2-new/tests/test_misc.py	2023-05-01 14:56:14.751068694 +0200
+@@ -14,7 +14,6 @@ import hashlib
+ from unittest import mock
+ import re
+ import os.path
+-import pkg_resources
+ import sys
+ import time
+ import typing as t
+@@ -635,15 +634,31 @@ def test_xlation(app, client):
+ def test_myxlation(app, sqlalchemy_datastore, pytestconfig):
+     # Test changing a single MSG and having an additional translation dir
+     # Flask-BabelEx doesn't support lists of directories..
+-    try:
+-        import flask_babelex  # noqa: F401
++    pytest.importorskip("flask_babel")
+ 
+-        pytest.skip("Flask-BabelEx doesn't support lists of translations")
+-    except ImportError:
+-        pass
++    i18n_dirname = [
++        "builtin",
++        os.path.join(pytestconfig.rootdir, "tests/translations"),
++    ]
++    init_app_with_options(
++        app, sqlalchemy_datastore, **{"SECURITY_I18N_DIRNAME": i18n_dirname}
++    )
++
++    assert check_xlation(app, "fr_FR"), "You must run python setup.py compile_catalog"
+ 
++    app.config["SECURITY_MSG_INVALID_PASSWORD"] = ("Password no-worky", "error")
++
++    client = app.test_client()
++    response = client.post("/login", data=dict(email="matt@lp.com", password="forgot"))
++    assert b"Passe - no-worky" in response.data
++
++
++@pytest.mark.babel()
++@pytest.mark.app_settings(babel_default_locale="fr_FR")
++def test_myxlation_complete(app, sqlalchemy_datastore, pytestconfig):
++    # Test having own translations and not using builtin.
++    pytest.importorskip("flask_babel")
+     i18n_dirname = [
+-        pkg_resources.resource_filename("flask_security", "translations"),
+         os.path.join(pytestconfig.rootdir, "tests/translations"),
+     ]
+     init_app_with_options(
