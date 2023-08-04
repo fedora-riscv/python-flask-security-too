@@ -1,0 +1,21 @@
+diff -rupN Flask-Security-Too-5.1.2/pytest.ini Flask-Security-Too-5.1.2-new/pytest.ini
+--- Flask-Security-Too-5.1.2/pytest.ini	2023-08-04 09:20:45.121943414 +0200
++++ Flask-Security-Too-5.1.2-new/pytest.ini	2023-08-04 09:20:52.366066404 +0200
+@@ -14,17 +14,3 @@ markers =
+     trackable
+     unified_signin
+     webauthn
+-
+-filterwarnings =
+-    error
+-    ignore:.*'app.json_encoder' is deprecated.*:DeprecationWarning:flask:0
+-    ignore:.*Setting 'json_encoder'.*:DeprecationWarning:flask:0
+-    ignore:.*'JSONEncoder'.*:DeprecationWarning:flask:0
+-    ignore:.*'locked_cached_property'.*:DeprecationWarning:flask:0
+-    ignore::DeprecationWarning:mongoengine:
+-    ignore:.*passwordless feature.*:DeprecationWarning:flask_security:0
+-    ignore:.*passing settings to bcrypt.*:DeprecationWarning:passlib:0
+-    ignore:.*'crypt' is deprecated.*:DeprecationWarning:passlib:0
+-    ignore:.*pkg_resources is deprecated.*:DeprecationWarning:pkg_resources:0
+-    ignore:.*'sms' was enabled in SECURITY_US_ENABLED_METHODS;.*:UserWarning:flask_security:0
+-    ignore:.*'get_token_status' is deprecated.*:DeprecationWarning:flask_security:0

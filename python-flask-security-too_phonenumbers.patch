@@ -1,6 +1,6 @@
 diff -rupN --no-dereference Flask-Security-Too-5.1.2/Flask_Security_Too.egg-info/requires.txt Flask-Security-Too-5.1.2-new/Flask_Security_Too.egg-info/requires.txt
 --- Flask-Security-Too-5.1.2/Flask_Security_Too.egg-info/requires.txt	2023-03-13 16:21:20.000000000 +0100
-+++ Flask-Security-Too-5.1.2-new/Flask_Security_Too.egg-info/requires.txt	2023-05-01 14:56:14.784068356 +0200
++++ Flask-Security-Too-5.1.2-new/Flask_Security_Too.egg-info/requires.txt	2023-08-04 09:23:39.224938115 +0200
 @@ -26,5 +26,5 @@ sqlalchemy-utils>=0.38.3
  [mfa]
  cryptography>=37.0.4
@@ -9,20 +9,20 @@ diff -rupN --no-dereference Flask-Security-Too-5.1.2/Flask_Security_Too.egg-info
 +phonenumbers>=8.12.18
  webauthn>=1.6.0
 diff -rupN --no-dereference Flask-Security-Too-5.1.2/requirements/tests.txt Flask-Security-Too-5.1.2-new/requirements/tests.txt
---- Flask-Security-Too-5.1.2/requirements/tests.txt	2023-05-01 14:56:14.746068744 +0200
-+++ Flask-Security-Too-5.1.2-new/requirements/tests.txt	2023-05-01 14:56:14.784068356 +0200
+--- Flask-Security-Too-5.1.2/requirements/tests.txt	2023-08-04 09:23:39.186937454 +0200
++++ Flask-Security-Too-5.1.2-new/requirements/tests.txt	2023-08-04 09:23:39.224938115 +0200
 @@ -16,7 +16,7 @@ python-dateutil
  mongoengine
  mongomock
  passlib
 -phonenumberslite
 +phonenumbers
- pydocstyle
  pytest-cache
  pytest-cov
+ pytest
 diff -rupN --no-dereference Flask-Security-Too-5.1.2/setup.cfg Flask-Security-Too-5.1.2-new/setup.cfg
 --- Flask-Security-Too-5.1.2/setup.cfg	2023-03-13 16:21:20.115645600 +0100
-+++ Flask-Security-Too-5.1.2-new/setup.cfg	2023-05-01 14:56:14.784068356 +0200
++++ Flask-Security-Too-5.1.2-new/setup.cfg	2023-08-04 09:23:39.224938115 +0200
 @@ -13,7 +13,7 @@ common =
  mfa = 
  	cryptography>=37.0.4

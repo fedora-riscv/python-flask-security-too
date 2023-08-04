@@ -1,6 +1,6 @@
 diff -rupN --no-dereference Flask-Security-Too-5.1.2/flask_security/babel.py Flask-Security-Too-5.1.2-new/flask_security/babel.py
 --- Flask-Security-Too-5.1.2/flask_security/babel.py	2023-03-13 16:20:25.000000000 +0100
-+++ Flask-Security-Too-5.1.2-new/flask_security/babel.py	2023-05-01 14:56:14.749068714 +0200
++++ Flask-Security-Too-5.1.2-new/flask_security/babel.py	2023-08-04 09:23:39.190937523 +0200
 @@ -15,6 +15,11 @@
  
  # flake8: noqa: F811
@@ -45,7 +45,7 @@ diff -rupN --no-dereference Flask-Security-Too-5.1.2/flask_security/babel.py Fla
  
 diff -rupN --no-dereference Flask-Security-Too-5.1.2/flask_security/core.py Flask-Security-Too-5.1.2-new/flask_security/core.py
 --- Flask-Security-Too-5.1.2/flask_security/core.py	2023-03-13 16:20:25.000000000 +0100
-+++ Flask-Security-Too-5.1.2-new/flask_security/core.py	2023-05-01 14:56:14.750068704 +0200
++++ Flask-Security-Too-5.1.2-new/flask_security/core.py	2023-08-04 09:23:39.190937523 +0200
 @@ -18,7 +18,6 @@ import re
  import typing as t
  import warnings
@@ -75,7 +75,7 @@ diff -rupN --no-dereference Flask-Security-Too-5.1.2/flask_security/core.py Flas
  
 diff -rupN --no-dereference Flask-Security-Too-5.1.2/flask_security/json.py Flask-Security-Too-5.1.2-new/flask_security/json.py
 --- Flask-Security-Too-5.1.2/flask_security/json.py	2023-03-13 16:20:25.000000000 +0100
-+++ Flask-Security-Too-5.1.2-new/flask_security/json.py	2023-05-01 14:56:14.750068704 +0200
++++ Flask-Security-Too-5.1.2-new/flask_security/json.py	2023-08-04 09:23:39.190937523 +0200
 @@ -6,13 +6,6 @@
  
      Pieces of this code liberally copied from flask-mongoengine.
@@ -114,7 +114,7 @@ diff -rupN --no-dereference Flask-Security-Too-5.1.2/flask_security/json.py Flas
          bp.json_encoder = _use_encoder(app.json_encoder)
 diff -rupN --no-dereference Flask-Security-Too-5.1.2/flask_security/utils.py Flask-Security-Too-5.1.2-new/flask_security/utils.py
 --- Flask-Security-Too-5.1.2/flask_security/utils.py	2023-03-13 16:20:25.000000000 +0100
-+++ Flask-Security-Too-5.1.2-new/flask_security/utils.py	2023-05-01 14:56:14.750068704 +0200
++++ Flask-Security-Too-5.1.2-new/flask_security/utils.py	2023-08-04 09:23:39.191937541 +0200
 @@ -14,7 +14,6 @@ import datetime
  from functools import partial
  import hashlib
@@ -144,7 +144,7 @@ diff -rupN --no-dereference Flask-Security-Too-5.1.2/flask_security/utils.py Fla
          session.pop("fs_cc")
 diff -rupN --no-dereference Flask-Security-Too-5.1.2/pytest.ini Flask-Security-Too-5.1.2-new/pytest.ini
 --- Flask-Security-Too-5.1.2/pytest.ini	2023-03-13 16:20:25.000000000 +0100
-+++ Flask-Security-Too-5.1.2-new/pytest.ini	2023-05-01 14:56:14.751068694 +0200
++++ Flask-Security-Too-5.1.2-new/pytest.ini	2023-08-04 09:23:39.191937541 +0200
 @@ -20,9 +20,11 @@ filterwarnings =
      ignore:.*'app.json_encoder' is deprecated.*:DeprecationWarning:flask:0
      ignore:.*Setting 'json_encoder'.*:DeprecationWarning:flask:0
@@ -159,7 +159,7 @@ diff -rupN --no-dereference Flask-Security-Too-5.1.2/pytest.ini Flask-Security-T
      ignore:.*'get_token_status' is deprecated.*:DeprecationWarning:flask_security:0
 diff -rupN --no-dereference Flask-Security-Too-5.1.2/setup.py Flask-Security-Too-5.1.2-new/setup.py
 --- Flask-Security-Too-5.1.2/setup.py	2023-03-13 16:20:25.000000000 +0100
-+++ Flask-Security-Too-5.1.2-new/setup.py	2023-05-01 14:56:14.751068694 +0200
++++ Flask-Security-Too-5.1.2-new/setup.py	2023-08-04 09:23:39.191937541 +0200
 @@ -10,7 +10,7 @@ with open("flask_security/__init__.py",
      version = re.search(r'__version__ = "(.*?)"', f.read()).group(1)
  
@@ -179,7 +179,7 @@ diff -rupN --no-dereference Flask-Security-Too-5.1.2/setup.py Flask-Security-Too
  packages = find_packages(exclude=["tests"])
 diff -rupN --no-dereference Flask-Security-Too-5.1.2/tests/test_misc.py Flask-Security-Too-5.1.2-new/tests/test_misc.py
 --- Flask-Security-Too-5.1.2/tests/test_misc.py	2023-03-13 16:20:25.000000000 +0100
-+++ Flask-Security-Too-5.1.2-new/tests/test_misc.py	2023-05-01 14:56:14.751068694 +0200
++++ Flask-Security-Too-5.1.2-new/tests/test_misc.py	2023-08-04 09:23:39.192937558 +0200
 @@ -14,7 +14,6 @@ import hashlib
  from unittest import mock
  import re
